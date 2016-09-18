@@ -55,85 +55,43 @@ namespace HeartRate
                 // Connect to Microsoft Band.
                 using (IBandClient bandClient = await BandClientManager.Instance.ConnectAsync(pairedBands[0]))
                 {
-                    // Create the small and tile icons from writable bitmaps.
-                    // Small icons are 24x24 pixels.
-                    //WriteableBitmap smallIconBitmap = new WriteableBitmap(24, 24);
-                    //BandIcon smallIcon = smallIconBitmap.ToBandIcon();
-                    // Tile icons are 46x46 pixels for Microsoft Band 1, and 48x48 pixels
-                    // for Microsoft Band 2.
-                    //WriteableBitmap tileIconBitmap = new WriteableBitmap(46, 46);
-                    //BandIcon tileIcon = tileIconBitmap.ToBandIcon();
-
                     // create a new Guid for the tile
                     Guid tileGuid = Guid.NewGuid();
-                    // create a new tile with a new Guid
-                /*    BandTile tile = new BandTile(tileGuid)
-                    {
-                        // enable badging (the count of unread messages)
-                        IsBadgingEnabled = true,
-                        // set the name
-                        Name = "TileName",
-                        // set the icons
-                        SmallIcon = smallIcon,
-                        TileIcon = tileIcon
-                    };
-                */    
+
                     // Create the small and tile icons from writable bitmaps.
                     // Small icons are 24x24 pixels.
                     WriteableBitmap smallIconBitmap = new WriteableBitmap(24, 24);
+                    
+
+                    // try #1
+                    var imageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/SampleTileIconSmall.png"));
+                    var fileStream = await imageFile.OpenAsync(FileAccessMode.Read);
+                    
+                    await smallIconBitmap.SetSourceAsync(fileStream);
                     BandIcon smallIcon = smallIconBitmap.ToBandIcon();
-                    // Tile icons are 46x46 pixels for Microsoft Band 1, and 48x48 pixels
-                    // for Microsoft Band 2.
-                    WriteableBitmap tileIconBitmap = new WriteableBitmap(46, 46);
-                    BandIcon tileIcon = tileIconBitmap.ToBandIcon();
 
-                    //WriteableBitmap smallIconBitmap = new WriteableBitmap(1, 1);
-                    
-
-                    // try #1
-                    //var imageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("C:/Users/Administrator/Downloads/Microsoft Band SDK and Samples for Windows/Samples/HeartRate/HeartRate.Shared/Assets/SampleTileIconSmall.png", UriKind.Absolute));
-                    //var fileStream = await imageFile.OpenAsync(FileAccessMode.Read);
-
-                    // try #2
-                    //var fileStream = File.OpenRead("C:/Users/Administrator/Downloads/Microsoft Band SDK and Samples for Windows/Samples/HeartRate/HeartRate.Shared/Assets/SampleTileIconSmall.png");
-
-                    // try #3
-                    //StorageFile fileStream = await StorageFile.GetFileFromApplicationUriAsync(new Uri("C:/Users/Administrator/Downloads/Microsoft Band SDK and Samples for Windows/Samples/HeartRate/HeartRate.Shared/Assets/SampleTileIconSmall.png", UriKind.Absolute));
-
-                    //await smallIconBitmap.SetSourceAsync(fileStream);
-                    //BandIcon smallIcon = smallIconBitmap.ToBandIcon();
-
-                    //WriteableBitmap largeIconBitmap = new WriteableBitmap(1, 1);
+                    // Tile icons are 46x46 pixels for Microsoft Band 1, and 48x48 pixels for Microsoft Band 2.
+                    WriteableBitmap largeIconBitmap = new WriteableBitmap(46, 46);
 
 
                     // try #1
-                    //var imageFile2 = await StorageFile.GetFileFromApplicationUriAsync(new Uri("C:/Users/Administrator/Downloads/Microsoft Band SDK and Samples for Windows/Samples/HeartRate/HeartRate.Shared/Assets/SampleTileIconLarge.png", UriKind.Absolute));
-                    //var fileStream2 = await imageFile2.OpenAsync(FileAccessMode.Read);
+                    var imageFile2 = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/SampleTileIconLarge.png"));
+                    var fileStream2 = await imageFile2.OpenAsync(FileAccessMode.Read);
                     
-                    // try #2
-                    //var fileStream2 = File.OpenRead("C:/Users/Administrator/Downloads/Microsoft Band SDK and Samples for Windows/Samples/HeartRate/HeartRate.Shared/Assets/SampleTileIconLarge.png");
+                    await largeIconBitmap.SetSourceAsync(fileStream2);
+                    BandIcon largeIcon = largeIconBitmap.ToBandIcon();
 
-
-                    // try #3
-                    //StorageFile fileStream2 = await StorageFile.GetFileFromApplicationUriAsync(new Uri("C:/Users/Administrator/Downloads/Microsoft Band SDK and Samples for Windows/Samples/HeartRate/HeartRate.Shared/Assets/SampleTileIconLarge.png", UriKind.Absolute));
-
-
-                    //await largeIconBitmap.SetSourceAsync(fileStream2);
-                    //BandIcon largeIcon = largeIconBitmap.ToBandIcon();
-
-
+                    // create a new tile with a new Guid
                     BandTile tile = new BandTile(tileGuid)
                     {
                         // enable badging (the count of unread messages)
                         IsBadgingEnabled = true,
                         // set the name
-                        Name = "My Tile",
+                        Name = "Smart Nighter",
                         // set the icons
-                        TileIcon = tileIcon,
+                        TileIcon = largeIcon,
                         SmallIcon = smallIcon
                     };   
-
-                    
 
                     // add the tile to the Band
                     await bandClient.TileManager.AddTileAsync(tile);
